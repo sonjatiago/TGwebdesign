@@ -73,7 +73,7 @@
 }
 
 .view-project-btn {
-  margin-top: 1rem;
+  margin-top: 0rem;
   padding: 0.8rem 1.8rem;
   background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
   color: white;
@@ -126,7 +126,7 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 1rem;
+  margin-top: 0.1rem;
 }
 
 .dot {
