@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../context/LanguageContext';
 import useScroll from '../../components/hooks/useScroll';
@@ -13,78 +13,90 @@ const Home = () => {
   const navigate = useNavigate();
   const t = useTranslation();
 
-  const sections = [
-    'home',
-    'portfolio',
-    'services',
-    'partners'
-  ];
+  // Memoize sections array to prevent unnecessary rerenders
+  const sections = useMemo(() => ['home', 'portfolio', 'services', 'partners'], []);
 
   const { currentSection, scrollToSection } = useScroll(sections);
+
+  // Memoize section visibility check
+  const isSectionVisible = useCallback((index) => currentSection >= index, [currentSection]);
+
+  // Animation variants for framer-motion
+  const contentVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (custom) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: custom, duration: 0.8 }
+    })
+  };
+
+  // Section render helper
+  const renderSection = (Component, index, id) => (
+    <motion.section
+      id={id}
+      className={`${id}-section ${isSectionVisible(index) ? 'visible' : ''}`}
+      initial={false}
+      animate={{
+        opacity: isSectionVisible(index) ? 1 : 0,
+        visibility: isSectionVisible(index) ? 'visible' : 'hidden'
+      }}
+      transition={{ duration: 0.5 }}
+    >
+      <AnimatePresence mode="wait">
+        {isSectionVisible(index) && <Component />}
+      </AnimatePresence>
+    </motion.section>
+  );
 
   return (
     <div className="home-container">
       <div className="sections-wrapper">
-        <section id="home" className="hero-section">
+        {/* Hero Section */}
+        <motion.section id="home" className="hero-section">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1 }}
             className="hero-content"
           >
-            <img src={Logo} alt="Company Logo" className="hero-logo" />
+            <motion.img
+              src={Logo}
+              alt="Company Logo"
+              className="hero-logo"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.15 }}
+              transition={{ duration: 1 }}
+            />
+            
             <motion.h1
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              custom={0.5}
             >
               {t.heroSlogan}
             </motion.h1>
+
             <motion.p
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
               className="hero-subtitle"
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              custom={0.8}
             >
               {t.heroSubtitle}
             </motion.p>
           </motion.div>
-        </section>
+        </motion.section>
 
-        <section 
-          id="portfolio" 
-          className={`portfolio-section ${currentSection >= 1 ? 'visible' : ''}`}
-          style={{ 
-            opacity: currentSection >= 1 ? 1 : 0,
-            visibility: currentSection >= 1 ? 'visible' : 'hidden'
-          }}
-        >
-          <Portfolio />
-        </section>
-
-        <section 
-          id="services" 
-          className={`services-section ${currentSection >= 2 ? 'visible' : ''}`}
-          style={{ 
-            opacity: currentSection >= 2 ? 1 : 0,
-            visibility: currentSection >= 2 ? 'visible' : 'hidden'
-          }}
-        >
-          <Services />
-        </section>
-
-        <section 
-          id="partners" 
-          className={`partners-section ${currentSection >= 3 ? 'visible' : ''}`}
-          style={{ 
-            opacity: currentSection >= 3 ? 1 : 0,
-            visibility: currentSection >= 3 ? 'visible' : 'hidden'
-          }}
-        >
-          <Partners />
-        </section>
+        {/* Dynamic Sections */}
+        {renderSection(Portfolio, 1, 'portfolio')}
+        {renderSection(Services, 2, 'services')}
+        {renderSection(Partners, 3, 'partners')}
       </div>
 
+      {/* Hire Us Button */}
       <motion.button
         className="hire-us-button"
         whileHover={{ scale: 1.05 }}
@@ -94,15 +106,22 @@ const Home = () => {
         {t.hireUs}
       </motion.button>
 
+      {/* Scroll Indicators */}
       <div className="scroll-indicator">
         {sections.map((section, index) => (
           <motion.div
             key={section}
             className={`indicator ${currentSection === index ? 'active' : ''}`}
             whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => scrollToSection(index)}
             aria-label={t[section]}
             title={t[section]}
+            initial={false}
+            animate={{
+              backgroundColor: currentSection === index ? '#FF6B6B' : 'rgba(255, 255, 255, 0.3)'
+            }}
+            transition={{ duration: 0.3 }}
           />
         ))}
       </div>
@@ -110,4 +129,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);

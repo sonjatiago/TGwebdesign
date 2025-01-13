@@ -151,3 +151,85 @@
     font-size: 1rem;
   }
 }
+
+/* Add these rules at the end of your existing CSS file */
+
+/* iOS-specific adjustments */
+@supports (-webkit-touch-callout: none) {
+  .partners-container {
+    /* Add safe area insets */
+    padding: calc(2rem + env(safe-area-inset-top))
+             calc(2rem + env(safe-area-inset-right))
+             calc(2rem + env(safe-area-inset-bottom))
+             calc(2rem + env(safe-area-inset-left));
+    /* Enable smooth scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .partners-slider-container {
+    /* Fix gradient background rendering */
+    -webkit-transform: translateZ(0);
+  }
+
+  .partners-slider {
+    /* Improve scroll performance */
+    -webkit-overflow-scrolling: touch;
+    /* Prevent rubber-band effect */
+    overscroll-behavior-x: none;
+  }
+
+  .partner-logo {
+    /* Remove tap highlight */
+    -webkit-tap-highlight-color: transparent;
+    /* Better touch handling */
+    touch-action: manipulation;
+  }
+
+  .partner-with-us-btn {
+    /* Remove tap highlight */
+    -webkit-tap-highlight-color: transparent;
+    /* Better touch handling */
+    touch-action: manipulation;
+  }
+
+  /* Fix hover effects on touch devices */
+  .partner-logo:active {
+    transform: scale(0.98);
+  }
+
+  .partner-with-us-btn:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Media queries for iOS mobile */
+@media (max-width: 768px) {
+  @supports (-webkit-touch-callout: none) {
+    .partners-container {
+      padding: calc(1rem + env(safe-area-inset-top))
+               calc(1rem + env(safe-area-inset-right))
+               calc(1rem + env(safe-area-inset-bottom))
+               calc(1rem + env(safe-area-inset-left));
+    }
+
+    .partner-logo {
+      /* Increase touch target size */
+      min-height: 44px;
+    }
+
+    .partner-with-us-btn {
+      /* Account for home indicator */
+      margin-bottom: env(safe-area-inset-bottom);
+    }
+  }
+}
+
+/* Fix for iPhone landscape mode */
+@media screen and (orientation: landscape) {
+  @supports (-webkit-touch-callout: none) {
+    .partners-container {
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
+    }
+  }
+}
