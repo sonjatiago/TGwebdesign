@@ -90,7 +90,7 @@ const Portfolio = () => {
       if (isPlaying) {
         paginate(1);
       }
-    }, 5000);
+    }, 15000);
 
     return () => clearInterval(timer);
   }, [currentIndex, isPlaying, paginate]);
