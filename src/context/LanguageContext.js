@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState } from 'react';
 
 const translations = {
   en: {
+    weSpeak: "We speak your language!",
+    languageSwitch: "Change language",
     // Navigation
     home: 'Home',
     services: 'Services',
@@ -75,13 +77,15 @@ const translations = {
     companyPhone: '+372 58 34 9800',
     companyEmail: 'info@tgwebdesign.net',
     socialMedia: {
-      facebook: 'Follow us on Facebook',
+      facebook: 'Follow us on Facebook',  
       twitter: 'Follow us on Twitter',
       instagram: 'Follow us on Instagram',
       linkedin: 'Connect on LinkedIn'
     }
   },
   fr: {
+    weSpeak: "Nous parlons votre langue !",
+    languageSwitch: "Changer de langue",
     // Navigation
     home: 'Accueil',
     services: 'Services',
@@ -162,6 +166,8 @@ const translations = {
     }
   },
   es: {
+    weSpeak: "¡Hablamos tu idioma!",
+    languageSwitch: "Cambiar idioma",
     // Navigation
     home: 'Inicio',
     services: 'Servicios',
@@ -242,6 +248,8 @@ const translations = {
     }
   },
   de: {
+    weSpeak: "Wir sprechen Ihre Sprache!",
+    languageSwitch: "Sprache ändern",
     // Navigation
     home: 'Startseite',
     services: 'Dienstleistungen',
@@ -323,6 +331,8 @@ const translations = {
   },
 
   pt: {
+    weSpeak: "Nós falamos o seu idioma!",
+    languageSwitch: "Mudar idioma",
     // Navigation
     home: 'Início',
     services: 'Serviços',
@@ -404,6 +414,8 @@ const translations = {
   },
 
   et: {
+    weSpeak: "Me räägime teie keelt!",
+    languageSwitch: "Muuda keelt",
     // Navigation
     home: 'Avaleht',
     services: 'Teenused',
@@ -484,6 +496,8 @@ const translations = {
     }
   },
   fi: {
+    weSpeak: "Puhumme sinun kieltäsi!",
+    languageSwitch: "Vaihda kieltä",
     // Navigation
     home: 'Etusivu',
     services: 'Palvelut',
@@ -564,6 +578,8 @@ const translations = {
     }
   },
   zh: {
+    weSpeak: "我们说您的语言！",
+    languageSwitch: "更改语言",
     // Navigation
     home: '首页',
     services: '服务',
@@ -644,6 +660,8 @@ const translations = {
     }
   },
   it: {
+    weSpeak: "Parliamo la tua lingua!",
+    languageSwitch: "Cambia lingua",
     // Navigation
     home: 'Home',
     services: 'Servizi',
@@ -724,6 +742,8 @@ const translations = {
     }
   },
   ru: {
+    weSpeak: "Мы говорим на вашем языке!",
+    languageSwitch: "Изменить язык",
     // Navigation
     home: 'Главная',
     services: 'Услуги',
@@ -805,6 +825,8 @@ const translations = {
   },
 
   sv: {
+    weSpeak: "Vi talar ditt språk!",
+    languageSwitch: "Byt språk",
     // Navigation
     home: 'Hem',
     services: 'Tjänster',
@@ -1031,17 +1053,30 @@ export const LanguageProvider = ({ children }) => {
     return translations[browserLang] ? browserLang : 'en';
   });
 
+    // Add this new state for hint management
+    const [shouldShowHint, setShouldShowHint] = useState(() => {
+      return !localStorage.getItem('languageHintShown');
+    });
+
   const changeLanguage = (newLanguage) => {
     setLanguage(newLanguage);
     localStorage.setItem('preferredLanguage', newLanguage);
   };
+
+    // Add this new function
+    const dismissLanguageHint = () => {
+      setShouldShowHint(false);
+      localStorage.setItem('languageHintShown', 'true');
+    };
 
   const value = {
     language,
     setLanguage: changeLanguage,
     translations,
     languages, // Export languages array for use in components
-    t: translations[language] // Shorthand for current language translations
+    t: translations[language], // Shorthand for current language translations
+    shouldShowHint,          // Add this
+    dismissLanguageHint,     // Add this
   };
 
   return (
