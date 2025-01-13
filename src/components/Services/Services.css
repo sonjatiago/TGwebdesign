@@ -1,0 +1,151 @@
+.services-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  margin-top: 100px;
+}
+
+.services-container h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.services-carousel-container {
+  position: relative;
+  overflow: hidden;
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
+
+.services-row {
+  display: flex;
+  gap: 1rem;
+  transition: transform 0.5s ease;
+  padding: 0.5rem;
+}
+
+.service-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex: 0 0 calc(25% - 0.75rem);
+  min-width: 220px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 280px;
+}
+
+.service-icon {
+  background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 0.75rem auto;
+  color: white;
+}
+
+.service-card h3 {
+  font-size: 1.25rem;
+  margin: 0;
+  color: #333;
+}
+
+.service-card p {
+  color: #666;
+  line-height: 1.4;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
+  transform: scale(1.2);
+}
+
+.service-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+  .service-card {
+    flex: 0 0 calc(33.333% - 0.67rem);
+    height: 260px;
+  }
+}
+
+@media (max-width: 992px) {
+  .service-card {
+    flex: 0 0 calc(50% - 0.5rem);
+    height: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .services-container {
+    padding: 1rem;
+    margin-top: 80px;
+  }
+
+  .services-row {
+    display: block; /* Make the items stack vertically */
+    gap: 0.75rem; /* Adjust gap between stacked items */
+  }
+
+  .service-card {
+    flex: 0 0 100%;  /* Make each card take 100% of the row width */
+    max-width: none;  /* Remove the max-width restriction */
+    height: auto;  /* Allow cards to adjust in height based on content */
+    margin: 0 auto 1rem auto; /* Add space between stacked cards */
+  }
+
+  .service-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .service-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .service-card p {
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+  }
+
+  .learn-more-btn {
+    padding: 0.35rem 1rem;
+    font-size: 0.85rem;
+  }
+}

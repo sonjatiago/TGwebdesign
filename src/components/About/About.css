@@ -1,0 +1,18 @@
+/* src/components/About/About.css */
+.about-section {
+    padding: 50px 20px;
+    background-color: #ffffff;
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .about-content {
+    font-size: 1.25rem;
+    text-align: center;
+    color: #555;
+  }
+  
