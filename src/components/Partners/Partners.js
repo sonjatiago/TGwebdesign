@@ -24,7 +24,6 @@ const Partners = () => {
     <div className="partners-container">
       <motion.h2
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         {t.ourPartners}
@@ -49,8 +48,7 @@ const Partners = () => {
             <motion.div
               key={`${partner.id}-${index}`}
               className="partner-logo"
-              initial={{ opacity: 0.3 }}
-              whileHover={{ opacity: 1, scale: 1.05 }}
+                          whileHover={{ opacity: 1, scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
               <img src={partner.logo} alt={partner.name} />

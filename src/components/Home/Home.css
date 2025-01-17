@@ -159,20 +159,7 @@
 }
 
 /* Footer styles */
-.footer {
-  width: 100%;
-  color: white;
-  padding: 4rem 2rem;
-}
 
-.footer-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  position: relative;
-}
 
 .footer .footer-section {
   display: flex;
@@ -181,16 +168,9 @@
   position: relative;
   height: auto;
   opacity: 1;
+  border-radius: 20px;
 }
 
-.footer-logo-container {
-  margin-bottom: 1rem;
-}
-
-.footer-logo {
-  width: 150px;
-  height: auto;
-}
 
 .company-description {
   color: rgba(255, 255, 255, 0.8);

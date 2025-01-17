@@ -134,7 +134,7 @@ const Footer = ({ scrollToSection }) => {
 
       {/* Copyright Section */}
       <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Your Company. {t.allRightsReserved}</p>
+        <p>© {new Date().getFullYear()} TG Web Design. {t.allRightsReserved}</p>
       </div>
     </footer>
   );
