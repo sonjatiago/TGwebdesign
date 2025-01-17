@@ -1,3 +1,4 @@
+// Home.js
 import React, { useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +8,7 @@ import './Home.css';
 import Services from '../Services/Services';
 import Partners from '../Partners/Partners';
 import Portfolio from '../Portfolio/Portfolio';
+import Footer from '../Footer/Footer';
 import Logo from '../../assets/logo2.png';
 
 const Home = () => {
@@ -14,7 +16,7 @@ const Home = () => {
   const t = useTranslation();
 
   // Memoize sections array to prevent unnecessary rerenders
-  const sections = useMemo(() => ['home', 'portfolio', 'services', 'partners'], []);
+  const sections = useMemo(() => ['home', 'portfolio', 'services', 'partners', 'footer'], []);
 
   const { currentSection, scrollToSection } = useScroll(sections);
 
@@ -94,6 +96,20 @@ const Home = () => {
         {renderSection(Portfolio, 1, 'portfolio')}
         {renderSection(Services, 2, 'services')}
         {renderSection(Partners, 3, 'partners')}
+
+        {/* Footer Section */}
+        <motion.section
+          id="footer"
+          className={`footer-section ${isSectionVisible(4) ? 'visible' : ''}`}
+          initial={false}
+          animate={{
+            opacity: isSectionVisible(4) ? 1 : 0,
+            visibility: isSectionVisible(4) ? 'visible' : 'hidden'
+          }}
+          transition={{ duration: 0.5 }}
+        >
+          <Footer scrollToSection={scrollToSection} />
+        </motion.section>
       </div>
 
       {/* Hire Us Button */}
@@ -108,7 +124,7 @@ const Home = () => {
 
       {/* Scroll Indicators */}
       <div className="scroll-indicator">
-        {sections.map((section, index) => (
+        {sections.slice(0, -1).map((section, index) => (
           <motion.div
             key={section}
             className={`indicator ${currentSection === index ? 'active' : ''}`}

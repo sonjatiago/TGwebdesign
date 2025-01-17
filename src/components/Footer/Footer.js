@@ -1,3 +1,4 @@
+// Footer.js
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -15,14 +16,16 @@ import { useLanguage } from '../../context/LanguageContext';
 import Logo from '../../assets/logo.png';
 import './Footer.css';
 
-const Footer = () => {
+const Footer = ({ scrollToSection }) => {
   const { t } = useLanguage();
 
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    scrollToSection(0);
+  };
+
+  const handleQuickLinkClick = (sectionIndex) => (e) => {
+    e.preventDefault();
+    scrollToSection(sectionIndex);
   };
 
   return (
@@ -81,16 +84,16 @@ const Footer = () => {
           <h3>{t.quickLinks}</h3>
           <ul className="footer-links">
             <li>
-              <Link to="/#home">{t.home}</Link>
+              <Link to="/" onClick={handleQuickLinkClick(0)}>{t.home}</Link>
             </li>
             <li>
-              <Link to="/#portfolio">{t.portfolio}</Link>
+              <Link to="/" onClick={handleQuickLinkClick(1)}>{t.portfolio}</Link>
             </li>
             <li>
-              <Link to="/#services">{t.services}</Link>
+              <Link to="/" onClick={handleQuickLinkClick(2)}>{t.services}</Link>
             </li>
             <li>
-              <Link to="/#partners">{t.partners}</Link>
+              <Link to="/" onClick={handleQuickLinkClick(3)}>{t.partners}</Link>
             </li>
             <li>
               <Link to="/ContactUs">{t.contactUs}</Link>

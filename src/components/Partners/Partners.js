@@ -58,22 +58,6 @@ const Partners = () => {
           ))}
         </motion.div>
       </div>
-
-      <motion.div 
-        className="partnership-cta"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        <h3>{t.partnershipCTA}</h3>
-        <motion.button
-          className="partner-with-us-btn"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {t.partnerWithUs}
-        </motion.button>
-      </motion.div>
     </div>
   );
 };
