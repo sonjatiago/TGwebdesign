@@ -13,19 +13,25 @@ import {
   ArrowUpCircle
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useScrollContext } from '../../context/ScrollContext';  // Import ScrollContext
 import Logo from '../../assets/logo.png';
 import './Footer.css';
 
-const Footer = ({ scrollToSection }) => {
+const Footer = () => {
   const { t } = useLanguage();
+  const { scrollToSection } = useScrollContext();  // Get scrollToSection from context
 
   const scrollToTop = () => {
-    scrollToSection(0);
+    if (scrollToSection) {
+      scrollToSection(0);
+    }
   };
 
   const handleQuickLinkClick = (sectionIndex) => (e) => {
     e.preventDefault();
-    scrollToSection(sectionIndex);
+    if (scrollToSection) {
+      scrollToSection(sectionIndex);
+    }
   };
 
   return (
@@ -127,6 +133,7 @@ const Footer = ({ scrollToSection }) => {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           title={t.backToTop}
+          aria-label={t.backToTop}
         >
           <ArrowUpCircle size={24} />
         </motion.button>

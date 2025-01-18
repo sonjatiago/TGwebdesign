@@ -1,25 +1,21 @@
-import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { useScrollContext } from '../../context/ScrollContext';
 import Logo from '../../assets/logo.png';
 import './Navbar.css';
 
 export const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const [isMobileLangOpen, setIsMobileLangOpen] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
-  const scrollTimeout = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { language, setLanguage, languages, t } = useLanguage();
-
-  // Memoize sections array
-  const sections = useMemo(() => ['home', 'portfolio', 'services', 'partners'], []);
+  const { currentSection, scrollToSection } = useScrollContext();
 
   // Memoize navItems array
   const navItems = useMemo(() => [
@@ -30,111 +26,38 @@ export const NavBar = () => {
     { path: '/Contact', label: t.contactUs },
   ], [t.home, t.portfolio, t.services, t.partners, t.contactUs]);
 
-  // Handle scroll detection with debouncing
+  // Handle scroll detection
   const handleScroll = useCallback(() => {
     setIsScrolled(window.scrollY > 20);
-
-    if (location.pathname === '/') {
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-
-      if (!isScrolling) {
-        const scrollPosition = window.scrollY;
-        const viewportHeight = window.innerHeight;
-        const threshold = viewportHeight * 0.5;
-        const sectionIndex = Math.floor((scrollPosition + threshold) / viewportHeight);
-        
-        if (sectionIndex >= 0 && sectionIndex < sections.length) {
-          const newSection = sections[sectionIndex];
-          if (newSection !== activeSection) {
-            setActiveSection(newSection);
-            window.history.replaceState(null, null, `#${newSection}`);
-          }
-        }
-      }
-
-      // Debounce scroll handling
-      scrollTimeout.current = setTimeout(() => {
-        const scrollPosition = window.scrollY;
-        const viewportHeight = window.innerHeight;
-        const sectionIndex = Math.round(scrollPosition / viewportHeight);
-        
-        window.scrollTo({
-          top: sectionIndex * viewportHeight,
-          behavior: 'smooth'
-        });
-      }, 50);
-    }
-  }, [location.pathname, activeSection, isScrolling, sections]);
+  }, []);
 
   useEffect(() => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
     };
   }, [handleScroll]);
-
-  // Handle initial section on load
-  useEffect(() => {
-    const hash = window.location.hash.replace('#', '');
-    if (hash && location.pathname === '/' && sections.includes(hash)) {
-      const sectionIndex = sections.indexOf(hash);
-      requestAnimationFrame(() => {
-        setIsScrolling(true);
-        window.scrollTo({
-          top: sectionIndex * window.innerHeight,
-          behavior: 'smooth'
-        });
-        setTimeout(() => setIsScrolling(false), 1000);
-        setActiveSection(hash);
-      });
-    }
-  }, [location.pathname, sections]);
-
-  // Scroll to section function
-  const scrollToSection = useCallback((sectionName) => {
-    if (!sections.includes(sectionName)) return;
-    
-    const sectionIndex = sections.indexOf(sectionName);
-    setIsScrolling(true);
-    
-    if (location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        window.scrollTo({
-          top: sectionIndex * window.innerHeight,
-          behavior: 'smooth'
-        });
-        setTimeout(() => setIsScrolling(false), 1000);
-      }, 100);
-    } else {
-      window.scrollTo({
-        top: sectionIndex * window.innerHeight,
-        behavior: 'smooth'
-      });
-      setTimeout(() => setIsScrolling(false), 1000);
-    }
-    
-    setActiveSection(sectionName);
-    window.history.replaceState(null, null, `#${sectionName}`);
-  }, [location.pathname, navigate, sections]);
 
   // Handle navigation click
   const handleNavClick = useCallback((e, path, section) => {
     e.preventDefault();
     
-    if (section) {
-      scrollToSection(section);
+    if (section && location.pathname === '/') {
+      const sectionIndex = ['home', 'portfolio', 'services', 'partners', 'footer'].indexOf(section);
+      scrollToSection(sectionIndex);
+    } else if (section && location.pathname !== '/') {
+      navigate('/');
+      // Small delay to ensure navigation completes before scrolling
+      setTimeout(() => {
+        const sectionIndex = ['home', 'portfolio', 'services', 'partners', 'footer'].indexOf(section);
+        scrollToSection(sectionIndex);
+      }, 100);
     } else {
       navigate(path);
     }
     
     setIsMenuOpen(false);
-  }, [navigate, scrollToSection]);
+  }, [navigate, location.pathname, scrollToSection]);
 
   // Handle language selection
   const handleLanguageSelect = useCallback((langCode) => {
@@ -203,7 +126,7 @@ export const NavBar = () => {
                 to={item.path}
                 className={`nav-link ${
                   item.section ? 
-                    (activeSection === item.section ? 'active' : '') : 
+                    (currentSection === ['home', 'portfolio', 'services', 'partners', 'footer'].indexOf(item.section) ? 'active' : '') : 
                     (location.pathname === item.path ? 'active' : '')
                 }`}
                 onClick={(e) => handleNavClick(e, item.path, item.section)}
@@ -279,7 +202,7 @@ export const NavBar = () => {
                     to={item.path}
                     className={`nav-item ${
                       item.section ?
-                        (activeSection === item.section ? 'active' : '') :
+                        (currentSection === ['home', 'portfolio', 'services', 'partners', 'footer'].indexOf(item.section) ? 'active' : '') :
                         (location.pathname === item.path ? 'active' : '')
                     }`}
                     onClick={(e) => handleNavClick(e, item.path, item.section)}

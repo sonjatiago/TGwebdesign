@@ -17,7 +17,6 @@ const Partners = () => {
     { id: 4, name: "MiguelAM", logo: Logo1 },
   ];
 
-  // Double the partners array for seamless infinite scroll
   const scrollPartners = [...partners, ...partners];
 
   return (

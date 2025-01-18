@@ -3,7 +3,7 @@ import React, { useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from '../../context/LanguageContext';
-import useScroll from '../../components/hooks/useScroll';
+import { useScrollContext } from '../../context/ScrollContext';
 import './Home.css';
 import Services from '../Services/Services';
 import Partners from '../Partners/Partners';
@@ -14,11 +14,10 @@ import Logo from '../../assets/logo2.png';
 const Home = () => {
   const navigate = useNavigate();
   const t = useTranslation();
+  const { currentSection, scrollToSection } = useScrollContext();
 
   // Memoize sections array to prevent unnecessary rerenders
   const sections = useMemo(() => ['home', 'portfolio', 'services', 'partners', 'footer'], []);
-
-  const { currentSection, scrollToSection } = useScroll(sections);
 
   // Memoize section visibility check
   const isSectionVisible = useCallback((index) => currentSection >= index, [currentSection]);
@@ -51,11 +50,30 @@ const Home = () => {
     </motion.section>
   );
 
+  // Memoize navigation handler
+  const handleNavigation = useCallback((path) => {
+    navigate(path);
+  }, [navigate]);
+
+  // Memoize scroll handler
+  const handleScroll = useCallback((index) => {
+    scrollToSection(index);
+  }, [scrollToSection]);
+
   return (
     <div className="home-container">
       <div className="sections-wrapper">
         {/* Hero Section */}
-        <motion.section id="home" className="hero-section">
+        <motion.section 
+          id="home" 
+          className="hero-section"
+          initial={false}
+          animate={{
+            opacity: isSectionVisible(0) ? 1 : 0,
+            visibility: isSectionVisible(0) ? 'visible' : 'hidden'
+          }}
+          transition={{ duration: 0.5 }}
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -89,6 +107,20 @@ const Home = () => {
             >
               {t.heroSubtitle}
             </motion.p>
+
+            {/* Call to Action Button */}
+            <motion.button
+              className="cta-button"
+              variants={contentVariants}
+              initial="hidden"
+              animate="visible"
+              custom={1.1}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handleNavigation('/ContactUs')}
+            >
+              {t.getStarted}
+            </motion.button>
           </motion.div>
         </motion.section>
 
@@ -108,7 +140,7 @@ const Home = () => {
           }}
           transition={{ duration: 0.5 }}
         >
-          <Footer scrollToSection={scrollToSection} />
+          <Footer scrollToSection={handleScroll} />
         </motion.section>
       </div>
 
@@ -117,7 +149,10 @@ const Home = () => {
         className="hire-us-button"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => navigate('/ContactUs')}
+        onClick={() => handleNavigation('/ContactUs')}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2 }}
       >
         {t.hireUs}
       </motion.button>
@@ -130,7 +165,7 @@ const Home = () => {
             className={`indicator ${currentSection === index ? 'active' : ''}`}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => scrollToSection(index)}
+            onClick={() => handleScroll(index)}
             aria-label={t[section]}
             title={t[section]}
             initial={false}
@@ -141,6 +176,17 @@ const Home = () => {
           />
         ))}
       </div>
+
+      {/* Mobile Scroll Progress Indicator */}
+      <motion.div 
+        className="scroll-progress"
+        initial={{ scaleX: 0 }}
+        animate={{ 
+          scaleX: (currentSection + 1) / sections.length,
+          backgroundColor: currentSection === sections.length - 1 ? '#4CAF50' : '#FF6B6B'
+        }}
+        transition={{ duration: 0.3 }}
+      />
     </div>
   );
 };
