@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Phone, Mail, MapPin } from 'lucide-react';
 import { useTranslation } from '../../context/LanguageContext';
+import useContactScroll from '../hooks/useContactScroll';
 import './Contact.css';
 
 const Contact = () => {
   const t = useTranslation();
+  const { currentSection, scrollToSection, sections } = useContactScroll();
+  
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -25,11 +28,9 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to your backend
     console.log('Form submitted:', formData);
     setIsSubmitted(true);
     
-    // Reset form after 3 seconds
     setTimeout(() => {
       setIsSubmitted(false);
       setFormData({
@@ -69,15 +70,21 @@ const Contact = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.h1
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
+      <motion.section
+        id="contact-info"
+        className="contact-section"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: currentSection === 0 ? 1 : 0.3 }}
+        transition={{ duration: 0.5 }}
       >
-        {t.getInTouch}
-      </motion.h1>
-      
-      <div className="contact-content">
+        <motion.h1
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+        >
+          {t.getInTouch}
+        </motion.h1>
+        
         <motion.div 
           className="contact-info"
           initial={{ x: -50, opacity: 0 }}
@@ -105,7 +112,15 @@ const Contact = () => {
             ))}
           </div>
         </motion.div>
+      </motion.section>
 
+      <motion.section
+        id="contact-form"
+        className="contact-section"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: currentSection === 1 ? 1 : 0.3 }}
+        transition={{ duration: 0.5 }}
+      >
         <motion.div 
           className="contact-form-container"
           initial={{ x: 50, opacity: 0 }}
@@ -175,6 +190,26 @@ const Contact = () => {
             </motion.button>
           </form>
         </motion.div>
+      </motion.section>
+
+      {/* Scroll Indicators */}
+      <div className="scroll-indicator">
+        {sections.map((section, index) => (
+          <motion.div
+            key={section}
+            className={`indicator ${currentSection === index ? 'active' : ''}`}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => scrollToSection(index)}
+            aria-label={section}
+            title={section}
+            initial={false}
+            animate={{
+              backgroundColor: currentSection === index ? '#FF6B6B' : 'rgba(255, 255, 255, 0.3)'
+            }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
       </div>
     </motion.div>
   );

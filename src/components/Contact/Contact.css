@@ -1,15 +1,28 @@
 .contact-container {
-  min-height: 100vh;
+  position: relative;
+  height: 100vh;
   /* Account for iOS safe areas */
-  min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  /* Adjust padding for iOS safe areas */
-  padding: calc(4rem + env(safe-area-inset-top)) calc(2rem + env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom)) calc(2rem + env(safe-area-inset-left));
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
   background: white;
   /* Enable smooth scrolling on iOS */
   -webkit-overflow-scrolling: touch;
+}
+
+.contact-section {
+  height: 100vh;
+  /* Account for iOS safe areas */
+  height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* Adjust padding for iOS safe areas */
+  padding: calc(4rem + env(safe-area-inset-top)) calc(2rem + env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom)) calc(2rem + env(safe-area-inset-left));
 }
 
 .contact-container h1 {
@@ -33,6 +46,9 @@
 
 .contact-info {
   padding-right: 2rem;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .info-cards {
@@ -87,6 +103,9 @@
   padding: 2rem;
   border-radius: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
   /* Improve performance on iOS */
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
@@ -152,6 +171,35 @@
   opacity: 0.7;
 }
 
+/* Scroll indicator styles */
+.scroll-indicator {
+  position: fixed;
+  right: calc(2rem + env(safe-area-inset-right));
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+  /* Remove tap highlight on iOS */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  /* Improve touch handling */
+  touch-action: manipulation;
+}
+
+.indicator.active {
+  background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+}
+
 /* Only apply hover effects on non-touch devices */
 @media (hover: hover) {
   .submit-button:hover .send-icon {
@@ -194,10 +242,14 @@
   .contact-info {
     padding-right: 0;
   }
+
+  .scroll-indicator {
+    right: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .contact-container {
+  .contact-section {
     padding: calc(2rem + env(safe-area-inset-top)) calc(1rem + env(safe-area-inset-right)) calc(1rem + env(safe-area-inset-bottom)) calc(1rem + env(safe-area-inset-left));
   }
 
@@ -213,5 +265,9 @@
   .submit-button {
     padding: 1.2rem 2rem;
     margin-bottom: env(safe-area-inset-bottom);
+  }
+
+  .scroll-indicator {
+    right: 0.5rem;
   }
 }
