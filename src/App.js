@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { LanguageProvider } from './context/LanguageContext';
-import { ScrollProvider } from './context/ScrollContext';
+import { ScrollProvider } from '../src/context/ScrollContext';
 import Home from './components/Home/Home';
 import Contact from './components/Contact/Contact';
 import { NavBar } from './components/Navbar/Navbar';
