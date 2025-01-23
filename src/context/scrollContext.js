@@ -1,6 +1,6 @@
 // src/context/ScrollContext.js
 import React, { createContext, useContext } from 'react';
-import useScroll from '../components/hooks/useScroll';
+import useScroll from './hooks/useScroll';
 
 const ScrollContext = createContext();
 
